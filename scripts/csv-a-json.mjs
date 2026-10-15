@@ -10,7 +10,7 @@
  *  - id:    identificador corto y único (sale del nombre del archivo)
  *  - thumb: versión liviana para el mosaico (ImageKit la redimensiona)
  *  - full:  versión grande para el visor a pantalla completa
- *  - tam:   tamaño del mosaico (normal, ancho, alto, grande)
+ *  - ancho / alto: forma irregular de la pieza en el mosaico
  *
  * Si agregás o quitás fotos, actualizá el CSV y volvé a correr el script.
  * ------------------------------------------------------------------
@@ -21,7 +21,7 @@ import { resolve } from 'node:path';
 const raiz = resolve(import.meta.dirname, '..');
 
 // Busca el primer CSV que empiece con "urls-" en la raíz del proyecto
-const csv = readdirSync(raiz).find((f) => /^urls-.*\.csv$/i.test(f));
+const csv = readdirSync(raiz).find((f) => /^urls\.csv$/i.test(f));
 if (!csv) {
   console.error('No se encontró ningún archivo urls-*.csv en la raíz.');
   process.exit(1);
@@ -45,24 +45,42 @@ function conAncho(url, ancho) {
 }
 
 /**
- * Patrón de tamaños que se repite. Está pensado para que el mosaico
- * se vea variado pero equilibrado (mayoría de piezas normales,
- * con algunos acentos grandes, anchos y altos).
+ * Número "al azar" pero siempre igual para el mismo texto (hash FNV-1a).
+ * Así cada foto conserva su forma aunque se regenere el JSON o se
+ * agreguen fotos nuevas. Devuelve un valor entre 0 y 1.
  */
-const patron = [
-  'grande', 'normal', 'alto', 'normal', 'ancho', 'normal', 'normal',
-  'alto', 'normal', 'ancho', 'normal', 'grande', 'normal', 'alto',
-  'normal', 'normal', 'ancho', 'normal',
-];
+function azarFijo(texto) {
+  let h = 2166136261;
+  for (const c of texto) h = Math.imul(h ^ c.charCodeAt(0), 16777619);
+  return (h >>> 0) / 4294967296;
+}
 
-const imagenes = urls.map((url, i) => {
+/**
+ * Forma irregular de cada pieza, medida en la grilla fina de Galeria.jsx:
+ *  - ancho: en MEDIAS columnas (2 = una columna, 3 = una y media, 4 = dos)
+ *  - alto:  en CUARTOS de columna (4 con ancho 2 = un cuadrado)
+ * La proporción alto/ancho varía entre 0.6 (apaisada) y 1.7 (vertical),
+ * por eso casi ninguna pieza queda igual a su vecina.
+ */
+function formaPara(id) {
+  const a = azarFijo(id);
+  const b = azarFijo(id + '·alto');
+  const ancho = a < 0.45 ? 2 : a < 0.8 ? 3 : 4;
+  const proporcion = 0.6 + b * 1.1;
+  const alto = Math.max(3, Math.round(ancho * 2 * proporcion));
+  return { ancho, alto };
+}
+
+const imagenes = urls.map((url) => {
   const archivo = new URL(url).pathname.split('/').pop(); // IMG_2026..._719.jpg
-  const tam = patron[i % patron.length];
+  const id = archivo.replace(/\.[a-z]+$/i, '');
+  const { ancho, alto } = formaPara(id);
   return {
-    id: archivo.replace(/\.[a-z]+$/i, ''),
-    thumb: conAncho(url, tam === 'grande' ? 1000 : 640),
+    id,
+    thumb: conAncho(url, ancho === 4 ? 1000 : 640),
     full: conAncho(url, 1600),
-    tam,
+    ancho,
+    alto,
   };
 });
 

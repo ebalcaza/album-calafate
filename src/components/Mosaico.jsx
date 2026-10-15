@@ -11,7 +11,7 @@
  */
 import { useState } from 'react';
 
-export default function Mosaico({ imagen, indice, total, col, fila, prioritaria, onAbrir }) {
+export default function Mosaico({ imagen, indice, total, lugar, prioritaria, onAbrir }) {
   // Mientras la foto descarga se ve un brillo animado de "cargando"
   const [cargada, setCargada] = useState(false);
 
@@ -19,7 +19,11 @@ export default function Mosaico({ imagen, indice, total, col, fila, prioritaria,
     <button
       type="button"
       className={`mosaico ${cargada ? 'is-cargada' : ''}`}
-      style={{ gridColumn: `span ${col}`, gridRow: `span ${fila}` }}
+      // Posición exacta calculada en Galeria.jsx (las grillas CSS cuentan desde 1)
+      style={{
+        gridColumn: `${lugar.x + 1} / span ${lugar.w}`,
+        gridRow: `${lugar.y + 1} / span ${lugar.h}`,
+      }}
       data-indice={indice}
       onClick={() => onAbrir(indice)}
       aria-label={`Ver fotografía ${indice + 1} de ${total} en pantalla completa`}
