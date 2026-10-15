@@ -1,4 +1,4 @@
-# Flores — galería de naturaleza
+# Album calafate — galería de fotos
 
 Galería de fotografías de flores, plantas y naturaleza en forma de **mosaico**,
 hecha con **React + Vite**. Sin títulos ni textos: sólo las imágenes.
