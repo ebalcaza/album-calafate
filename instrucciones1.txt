@@ -1,0 +1,26 @@
+vas a crear un sitio web responsive, para pantallas grandes como para pantallas de telefonos
+moviles. 
+
+Lapagina web sera una galeria de imagenes, en mosaicos, de diferentes tamaños que previsualizaran las
+imagenes, elusuario, cuando haga click sobre ellas podra visualizarlas completamente.
+No habra titulos, solo las imagenes, y sera la unica pantalla del sitio, donde los usuarios
+podran scrolear las imagenes que dejo adjuntada en la lista de urls.
+La interfaz dara la posibilidad de verlo en varios colores, tipo modo oscuro/modo claro/modo marron/
+otros modos que den un aire diferente, utilizando diferentes combinaciones de colores,
+que ayuuden a las diferentes visualizaciones, con poca o con mucha luz, con poca vision, baja vision,
+poco enfoque, etc.
+Los estilos tendran colores degrade, para dar un efecto de profundidad, con colores pasteles.
+altenrando en los diferentes modos.
+La galeria de imagenes seran muchos mosaicos de dfiferentes tamños con bordes, que muestran
+una imagen particular, de una planta, una flor, o algo de la naturaleza que intenta mostrar
+la belleza natural.
+hazlo usando react. y podes armar un json para los recursos de las urls, de las imagenes, que voy
+a adjuntar en otro archivo, llamado "urls-1792039914868.csv"
+
+tambien dejaras anotaciones en el codigo que ayudaran a entender que hace cada parte del codigo.
+puedes ayudarme con los estilos, y proponer ideas para crear una galeria de arte contemporanea, que pueda
+visualizarse en diferentes dispositivos, haciendo incapie en los moviles.
+
+
+IMAGEKIT, TIENE LAS IMAGENES.
+https://imagekit.io/dashboard/media-library/L2Zsb3JlczEvRkxPUkVT
